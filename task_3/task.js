@@ -1,4 +1,5 @@
 const chatBody = document.querySelector(".chat__container--body")
+console.log(chatBody.clientWidth)
 
 
 const connection = new WebSocket('wss://echo.websocket.org');
@@ -32,9 +33,20 @@ connection.addEventListener("message", (event) => {
 		`<div class="chat__container chat__container--message chat__container--server">
 		<span class="chat__text chat__text--message">${event.data}</span></div>`
 
+	resizeMessage()
 
 })
 
+
+function resizeMessage() {
+
+	const message = chatBody.lastElementChild
+	const messageText = message.firstElementChild
+
+	if (messageText.offsetWidth >= (chatBody.clientWidth * 0.7)) {
+	 messageText.style.width = `${chatBody.clientWidth * 0.6}px`
+	} 
+}
 
 function sendMesaage() {
 	const input = document.querySelector(".chat__input")
@@ -46,6 +58,10 @@ function sendMesaage() {
 	chatBody.innerHTML += 
 		`<div class="chat__container chat__container--message chat__container--user">
 		<span class="chat__text chat__text--message">${input.value}</span></div>`
+		
+
+	resizeMessage()
+
 
 	connection.send(input.value)
 	input.value = ""
